@@ -1,0 +1,149 @@
+<html>
+  <style>
+  body {
+    background-color: teal;
+  }
+
+  div.sansserif {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  input {
+    width: 400px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 3px solid #555;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+  }
+  input:focus {
+    border: 3px solid #ccc;
+  }
+
+  textarea {
+    width: 100%;
+    height: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 3px solid #555;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+  }
+  textarea:focus {
+    border: 3px solid #ccc;
+  }
+
+  .button {
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border-radius: 4px;
+  }
+  .button1:hover {
+    background-color: #4CAF50; /* Green */
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  .button2:hover {
+    background-color: firebrick;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+
+  div.wide {
+    margin-top: 50px;
+    margin-bottom: 100px;
+    margin-right: 50px;
+    margin-left: 175px;
+  }
+
+  div.narrow {
+    margin-top: 50px;
+    margin-bottom: 0px;
+    margin-right: 175px;
+    margin-left: 0px;
+  }
+
+  #parent {
+  display: flex;
+  }
+  #narrow {
+    width: 30%;
+  }
+  #wide {
+    flex: 1;
+  }
+  </style>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Mail-O-Mat</title>
+  </head>
+
+  <body>
+    <div class="sansserif" id="parent">
+
+      <div class="wide" id="wide">
+        <h1>Mail-O-Mat</h1>
+        <h3>Your Gmail account:</h3> <input type="text" id="usr" placeholder="Username">   <input type="password" id="pwd" placeholder="Password">
+        <br><p>(Allow 'less secure apps' in your account settings)</p><br>
+        <h3>Email address of recipiant:</h3> <input type="text" id="email"><br>
+        <h3>Dates for special mail delivery:</h3> <input type="text" id="date" placeholder="DD.MM.YYYY">
+        <button class="button button1" onclick="append(document.getElementById('date').value)">Add</button>
+        <button class="button button2" onclick="wipe()">Clear</button><br>
+        <h4>Added dates: </h4> <p id="arr"></p>
+        <h3>Number of days to be sent in advance:</h3> <input type="text" id="days"><br><br>
+        <button class="button button1" onclick="submit()">Submit</button>
+      </div>
+
+      <div class="narrow" id="narrow">
+        <h3>Email:</h3> <input type="text" id="subject" placeholder="Subject"><br>
+        <textarea id="msg" name="subject" placeholder="Your message for the [date]..."></textarea><br>
+        <p>(Use the placeholder [date] to substitute your given dates)</p>
+      </div>
+
+    </div>
+
+    <script type="text/javascript" charset="utf-8">
+    var dates = [];
+    var styleDates = [];
+    var dateArr = [];
+
+    function append(date) {
+      dateArr = date.split(".");
+      dateStr = dateArr[2] + "-" + dateArr[1] + "-" + dateArr[0];
+      styleDates.push(" " + date);
+      dates.push(dateStr);
+      document.getElementById("arr").innerHTML = styleDates;
+    }
+
+    function wipe() {
+      dates = [];
+      styleDates = [];
+      document.getElementById("arr").innerHTML = styleDates;
+    }
+
+    function submit() {
+      var str = "get.php?email=" + document.getElementById("email").value + "&dates=" + dates[0];
+      for(i = 1; i < dates.length; i++) {
+        str += "," + dates[i];
+      }
+      str += "&days=" + document.getElementById("days").value + "&subject=" + document.getElementById("subject").value.replace(new RegExp(' ', 'g'), '__').replace(new RegExp('ü', 'g'), '_ue').replace(new RegExp('Ü', 'g'), '_Ue').replace(new RegExp('ä', 'g'), '_ae').replace(new RegExp('Ä', 'g'), '_Ae').replace(new RegExp('ö', 'g'), '_oe').replace(new RegExp('Ö', 'g'), '_Oe').replace(new RegExp('ß', 'g'), '_ss')
+      + "&usr=" + document.getElementById("usr").value + "&pwd=" + document.getElementById("pwd").value.replace(new RegExp(' ', 'g'), '__')
+      + "&msg=" + document.getElementById("msg").value.replace(new RegExp(' ', 'g'), '__').replace(new RegExp('\n', 'g'), '<br>').replace(new RegExp('ü', 'g'), '_ue').replace(new RegExp('Ü', 'g'), '_Ue').replace(new RegExp('ä', 'g'), '_ae').replace(new RegExp('Ä', 'g'), '_Ae').replace(new RegExp('ö', 'g'), '_oe').replace(new RegExp('Ö', 'g'), '_Oe').replace(new RegExp('ß', 'g'), '_ss');
+      window.location.href = str;
+    }
+    </script>
+
+  </body>
+</html>
